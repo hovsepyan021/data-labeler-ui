@@ -1,0 +1,220 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="secondary">
+            <ion-button (click)="logout()">
+                <ion-icon slot="icon-only" name="person-circle"></ion-icon>
+            </ion-button>
+            <ion-label style="cursor:pointer" (click)="logout()">
+                Logout
+            </ion-label>
+            <!--            <ion-button>-->
+            <!--                <ion-icon slot="icon-only" name="search"></ion-icon>-->
+            <!--            </ion-button>-->
+        </ion-buttons>
+<!--        <ion-buttons slot="primary">-->
+<!--            <ion-button color="danger">-->
+<!--                <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>-->
+<!--            </ion-button>-->
+<!--        </ion-buttons>-->
+        <ion-title>Admin Panel</ion-title>
+    </ion-toolbar>
+
+
+</ion-header>
+
+
+
+<ion-content [fullscreen]="true" slot="fixed">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">Data Labeler</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Operations</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-button style="width: 15%" (click)="changeImportedFile()" id="changeButtonId">
+                <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+                Import
+            </ion-button>
+            <input #importFileChooserElement type="file" accept=".xls,.xlsx,.xlsm" id="employeeImportInputFileID"
+                   (change)='onFileChange($event)' style="display: none;"/>
+            <ion-label style="color: green" *ngIf="showImportSuccess">
+                SUCCESS!! <ion-icon slot="start" name="checkmark-circle-sharp"></ion-icon>
+            </ion-label>
+            <ion-label style="color: red" *ngIf="showImportFailed">
+                FAILED!! <ion-icon slot="start" name="close-circle-sharp"></ion-icon>
+            </ion-label>
+        </ion-card-content>
+        <ion-card-content>
+            <ion-button style="width: 15%" (click)="exportData()" id="exportDataId">
+                <ion-icon slot="start" name="download-sharp"></ion-icon>
+                Export
+            </ion-button>
+        </ion-card-content>
+    </ion-card>
+<!--    <ion-card *ngIf="loadedMessages">-->
+<!--        <ion-card-header>-->
+<!--            <ion-card-subtitle>Loaded Data</ion-card-subtitle>-->
+<!--        </ion-card-header>-->
+
+<!--        <ion-card-content>-->
+<!--            <ion-item>-->
+<!--                <ion-label color="primary">Data to be labeled (qntty): {{loadedMessages?.length}}</ion-label>-->
+<!--                <ng-container *ngIf="started">-->
+<!--                    <ion-label color="primary">Data left to be labeled: {{loadedMessages ? loadedMessages.length - currentCount - 1 : ''}}</ion-label>-->
+<!--                    <ion-label color="primary">Data skipped to be labeled: {{skippedCount}}</ion-label>-->
+<!--                </ng-container>-->
+<!--            </ion-item>-->
+
+
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+<!--    <ion-card *ngIf="started">-->
+<!--        <ion-card-header>-->
+<!--            <ion-card-subtitle>Operations</ion-card-subtitle>-->
+<!--        </ion-card-header>-->
+
+<!--        <ion-card-content>-->
+<!--            <ion-button style="width: 15%" (click)="find()">-->
+<!--                <ion-icon slot="start" name="search-outline"></ion-icon>-->
+<!--                Find-->
+<!--            </ion-button>-->
+<!--            <ion-button style="width: 15%">-->
+<!--                <ion-icon slot="start" name="pricetag-sharp"></ion-icon>-->
+<!--                Label-->
+<!--            </ion-button>-->
+<!--            <ion-button style="width: 15%" (click)="next()">-->
+<!--                <ion-icon slot="start" name="arrow-forward-circle-outline"></ion-icon>-->
+<!--                Next-->
+<!--            </ion-button>-->
+<!--            <ion-button style="width: 15%" (click)="skip()">-->
+<!--                <ion-icon slot="start" name="hand-right-sharp"></ion-icon>-->
+<!--                Skip-->
+<!--            </ion-button>-->
+<!--            <ion-button style="width: 15%" (click)="end()">-->
+<!--                <ion-icon slot="start" name="log-out-sharp"></ion-icon>-->
+<!--                End-->
+<!--            </ion-button>-->
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+<!--    <ion-row>-->
+<!--        <ion-col>-->
+<!--            <ion-card>-->
+<!--                <ion-card-header>-->
+<!--                    <ion-card-subtitle>Item</ion-card-subtitle>-->
+<!--                </ion-card-header>-->
+
+<!--                <ion-card-content>-->
+<!--&lt;!&ndash;                    <button mat-raised-button >&ndash;&gt;-->
+<!--&lt;!&ndash;                        Export&ndash;&gt;-->
+<!--&lt;!&ndash;                    </button>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                    <ion-input type="file"></ion-input>&ndash;&gt;-->
+<!--                    <ion-button style="width: 15%" (click)="changeImportedFile()" id="changeButtonId">-->
+<!--                        <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>-->
+<!--                        Import-->
+<!--                    </ion-button>-->
+<!--                    <input #importFileChooserElement type="file" accept=".xls,.xlsx,.xlsm" id="employeeImportInputFileID"-->
+<!--                           (change)='onFileChange($event)' style="display: none;"/>-->
+<!--&lt;!&ndash;                    <ion-button style="width: 15%" (click)="exportData()">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <ion-icon slot="start" name="download-outline"></ion-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;                        Export Data&ndash;&gt;-->
+<!--&lt;!&ndash;                    </ion-button>&ndash;&gt;-->
+<!--                </ion-card-content>-->
+<!--            </ion-card>-->
+<!--        </ion-col>-->
+<!--   <ion-col>-->
+<!--       <ion-card>-->
+<!--           <ion-card-header>-->
+<!--               <ion-card-subtitle>Label</ion-card-subtitle>-->
+<!--           </ion-card-header>-->
+
+<!--           <ion-card-content>-->
+<!--               <ion-item>-->
+<!--                   <ion-label>Transaction type</ion-label>-->
+<!--                   <ion-select placeholder="Select One" [(ngModel)]="currentItem.type">-->
+<!--                       <ion-select-option value="Debit">Debit</ion-select-option>-->
+<!--                       <ion-select-option value="Credit">Credit</ion-select-option>-->
+<!--                   </ion-select>-->
+<!--               </ion-item>-->
+<!--               <ion-item>-->
+<!--                   <ion-label>Transaction amount</ion-label>-->
+<!--                   <ion-input class="ion-text-right" [(ngModel)]="currentItem.amount"></ion-input>-->
+<!--               </ion-item>-->
+<!--               <ion-item>-->
+<!--                   <ion-label>Label</ion-label>-->
+<!--                   <ion-input class="ion-text-right" [(ngModel)]="currentItem.label"></ion-input>-->
+<!--               </ion-item>-->
+<!--               <ion-item>-->
+<!--                   <ion-label>Comment</ion-label>-->
+<!--                   <ion-input class="ion-text-right" [(ngModel)]="currentItem.comment"></ion-input>-->
+<!--               </ion-item>-->
+
+
+
+<!--           </ion-card-content>-->
+<!--       </ion-card>-->
+<!--   </ion-col>-->
+
+<!--    </ion-row>-->
+<!--&lt;!&ndash;    <ion-card *ngIf="countries">&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-card-subtitle>Selected Country</ion-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-header>&ndash;&gt;-->
+
+<!--&lt;!&ndash;        <ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-select [(ngModel)]="selectedCountry" name="selectCountry" multiple="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                        [placeholder]="selectedCountry ? selectedCountry : 'Tap to select..'"&ndash;&gt;-->
+<!--&lt;!&ndash;                        (ionChange)="onComboboxSelect()" required>&ndash;&gt;-->
+<!--&lt;!&ndash;                <ion-select-option *ngFor="let country of countries" value="{{country.name}}">&ndash;&gt;-->
+<!--&lt;!&ndash;                    {{country.name}}&ndash;&gt;-->
+<!--&lt;!&ndash;                </ion-select-option>&ndash;&gt;-->
+<!--&lt;!&ndash;            </ion-select>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </ion-card>&ndash;&gt;-->
+<!--&lt;!&ndash;    <ion-card *ngIf="years">&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-card-subtitle>Selected Year</ion-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-select [(ngModel)]="selectedYear" name="selectedYear" multiple="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                        [placeholder]="selectedYear ? selectedYear : 'Tap to select..'"&ndash;&gt;-->
+<!--&lt;!&ndash;                        (ionChange)="onComboboxSelect()" required>&ndash;&gt;-->
+<!--&lt;!&ndash;                <ion-select-option *ngFor="let year of years" value="{{year.id}}">&ndash;&gt;-->
+<!--&lt;!&ndash;                    {{year.name}}&ndash;&gt;-->
+<!--&lt;!&ndash;                </ion-select-option>&ndash;&gt;-->
+<!--&lt;!&ndash;            </ion-select>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </ion-card>&ndash;&gt;-->
+<!--&lt;!&ndash;    <ion-card *ngIf="isLoading">&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-card-subtitle>Loading..</ion-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;            ...&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </ion-card>&ndash;&gt;-->
+<!--&lt;!&ndash;    <ion-card *ngIf="!isLoading && loadedHolidays.length == 0">&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-card-subtitle> NO DATA LOADED</ion-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;            ...&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </ion-card>&ndash;&gt;-->
+<!--&lt;!&ndash;    <ng-container *ngIf="loadedHolidays.length != 0">&ndash;&gt;-->
+<!--&lt;!&ndash;        <ion-card *ngFor="let loadedHoliday of loadedHolidays">&ndash;&gt;-->
+<!--&lt;!&ndash;            <ion-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;                <ion-card-subtitle>{{loadedHoliday.name}}</ion-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;            </ion-card-header>&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;                {{loadedHoliday.date}}&ndash;&gt;-->
+<!--&lt;!&ndash;            </ion-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ion-card>&ndash;&gt;-->
+<!--&lt;!&ndash;    </ng-container>&ndash;&gt;-->
+</ion-content>

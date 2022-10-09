@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Search</ion-title>
+        <ion-buttons slot="secondary">
+            <ion-button color="dark" (click)="close()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<div *ngIf="dividedWords" style="margin: 10%;">
+<!--    <ion-card>-->
+<!--        <ion-card-content>-->
+<!--            <ion-item>-->
+                <div id="mytxt" contenteditable="false" style="cursor:pointer">
+                    <span *ngFor="let dividedWord of dividedWords">
+                        <span *ngIf="dividedWord.is_selected" style="color: red;" (click)="dividedWord.is_selected = false">{{dividedWord.word}}&nbsp;</span>
+                        <span *ngIf="!dividedWord.is_selected" style="color: black;" (click)="dividedWord.is_selected = true">{{dividedWord.word}}&nbsp;</span>
+                    </span>
+                </div>
+<!--            </ion-item>-->
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+    <div style="justify-content: center;display: flex">
+        <ion-button (click)="google()">
+            <!--        <ion-icon slot="start"></ion-icon>-->
+            Google
+        </ion-button>
+        <ion-button (click)="bing()">
+            <!--        <ion-icon slot="start" name="hand-right-sharp"></ion-icon>-->
+            Bing
+        </ion-button>
+    </div>
+
+
+</div>

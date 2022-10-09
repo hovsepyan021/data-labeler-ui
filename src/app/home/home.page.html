@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title>
+            Data Labeler
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">Data Labeler</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div id="container">
+        <div>
+            <ion-img [style]="'height: 200px;'" [src]="'https://m-img.org/spai/w_559+q_lossless+ret_img+to_webp/https://static.matomo.org/wp-content/uploads/2020/02/campaign-tracking-web-ready-1.png'"></ion-img>
+        </div>
+        <ion-card>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label>Email</ion-label>
+                    <ion-input [(ngModel)]="username"></ion-input>
+                </ion-item>
+                <div *ngIf="invalidCredentials" class="validator-error"></div>
+                <ion-item>
+                    <ion-label>Password</ion-label>
+                    <ion-input [(ngModel)]="password" [color]="'dark'" [type]="'password'"></ion-input>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+
+
+        <ion-button (click)="onLoginClick()">
+            Login
+        </ion-button>
+    </div>
+</ion-content>

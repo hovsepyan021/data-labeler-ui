@@ -1,0 +1,302 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="secondary">
+            <ion-button (click)="logout()">
+                <ion-icon slot="icon-only" name="person-circle"></ion-icon>
+            </ion-button>
+            <ion-label style="cursor:pointer" (click)="logout()">
+                Logout
+            </ion-label>
+<!--            <ion-button>-->
+<!--                <ion-icon slot="icon-only" name="search"></ion-icon>-->
+<!--            </ion-button>-->
+        </ion-buttons>
+<!--        <ion-buttons slot="primary">-->
+<!--            <ion-button color="danger">-->
+<!--                <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>-->
+<!--            </ion-button>-->
+<!--        </ion-buttons>-->
+        <ion-title>Data Labeler</ion-title>
+    </ion-toolbar>
+
+
+</ion-header>
+
+
+
+<ion-content [fullscreen]="true" slot="fixed">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">Data Labeler</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-card *ngIf="!started">
+        <ion-card-header>
+            <ion-card-subtitle>Operations</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+            <ion-button style="width: 15%" (click)="loadMessages()">
+                <ion-icon slot="start" name="download-outline"></ion-icon>
+                Load Data
+            </ion-button>
+            <ion-button *ngIf="loadedMessages && loadedMessages.length > 0" style="width: 15%" (click)="start()">
+                <ion-icon slot="start" name="play-outline"></ion-icon>
+                Start
+            </ion-button>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="loadedMessages && !started">
+        <ion-card-header>
+            <ion-card-subtitle>Loaded Data</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+            <ion-item>
+                <ion-label color="primary">Data to be labeled (qntty): {{loadedMessages?.length}}</ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="started">
+        <ion-card-content>
+            <ion-button style="width: 15%" (click)="find()">
+                <ion-icon slot="start" name="search-outline"></ion-icon>
+                Find
+            </ion-button>
+            <ion-button style="width: 15%" (click)="next()">
+                <ion-icon slot="start" name="arrow-forward-circle-outline"></ion-icon>
+                Next
+            </ion-button>
+            <ion-button style="width: 15%" (click)="skip()">
+                <ion-icon slot="start" name="hand-right-sharp"></ion-icon>
+                Skip
+            </ion-button>
+            <ion-button style="width: 15%" (click)="end()">
+                <ion-icon slot="start" name="log-out-sharp"></ion-icon>
+                End
+            </ion-button>
+            <ion-button style="width: 15%" (click)="search()">
+                <ion-icon slot="start" name="search-circle"></ion-icon>
+                Search
+            </ion-button>
+            <ng-container style="width: 10%">
+               <pre style="display: inline-grid; padding-left: 1%">
+                   <ion-label color="primary">Data to be labeled (qntty): {{loadedMessages?.length}}</ion-label>
+                   <ion-label color="primary">Data left to be labeled: {{loadedMessages ? loadedMessages.length - currentCount - 1 : ''}}</ion-label>
+                   <ion-label color="primary">Data skipped to be labeled: {{skippedCount}}</ion-label>
+                </pre>
+            </ng-container>
+        </ion-card-content>
+    </ion-card>
+    <ion-row *ngIf="currentItem">
+        <ion-col>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Item</ion-card-subtitle>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <ion-item>
+                        <ion-text>SN: {{currentItem.message_id}}</ion-text>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-text>Description</ion-text>
+                    </ion-item>
+                    <ion-item *ngIf="!highlightedCharacters">
+                        <ion-textarea autoGrow="true" [(ngModel)]="currentItem.description" (ngModelChange)="onDescriptionChange($event)"></ion-textarea>
+<!--                        <ion-textarea disabled="true" rows="&lt;!&ndash;&ndash;&gt;6" cols="20" [value]="currentItem.description"></ion-textarea>-->
+                    </ion-item>
+                    <ion-item *ngIf="highlightedCharacters">
+                        <div id="mytxt" contenteditable="false">
+                            <ng-container *ngFor="let char of highlightedCharacters">
+                                <span *ngIf="char.is_highlighted" style="color: red;">{{char.char}}</span>
+                                <span *ngIf="!char.is_highlighted" style="color: black;">{{char.char}}</span>
+                            </ng-container>
+                        </div>
+                    </ion-item>
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+   <ion-col>
+       <ion-card>
+           <ion-card-header>
+               <ion-card-subtitle>Info</ion-card-subtitle>
+           </ion-card-header>
+
+           <ion-card-content>
+               <ion-item>
+                   <ion-label>Transaction type</ion-label>
+                   <ion-select placeholder="Select One" [(ngModel)]="currentItem.type">
+                       <ion-select-option value="Debit">Debit</ion-select-option>
+                       <ion-select-option value="Credit">Credit</ion-select-option>
+                   </ion-select>
+               </ion-item>
+               <ion-item>
+                   <ion-label>Transaction amount</ion-label>
+                   <ion-input class="ion-text-right" [(ngModel)]="currentItem.amount"></ion-input>
+               </ion-item>
+<!--               <ion-item>-->
+<!--                   <ion-label>Label</ion-label>-->
+<!--                   <ion-input class="ion-text-right" [(ngModel)]="currentItem.label"></ion-input>-->
+<!--               </ion-item>-->
+               <ion-item>
+                   <ion-label>Comment</ion-label>
+                   <ion-input class="ion-text-right" [(ngModel)]="currentItem.comment"></ion-input>
+               </ion-item>
+
+
+
+           </ion-card-content>
+       </ion-card>
+   </ion-col>
+
+    </ion-row>
+    <ion-row *ngIf="currentItem">
+        <ion-col>
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Matched Finance Terms</ion-card-subtitle>
+                </ion-card-header>
+
+                <ion-card-content>
+<!--                    <ion-item>-->
+<!--                        <ion-text></ion-text>-->
+<!--                    </ion-item>-->
+
+                    <ion-list>
+                        <ion-item *ngFor="let term of matchedFinanceTerms">
+                            {{term.term}} : {{term.description}}
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+        <ion-col>
+            <ion-card>
+                <ion-card-content>
+                    <ion-card-header>
+                        <!--                    <ion-toggle [(ngModel)]="labelMode" (ionChange)="currentItem.label = ''"></ion-toggle>-->
+                        <ion-card-subtitle>
+                            <!--                        <ng-container class="ion-text-right">-->
+                            <!--                          -->
+                            <!--                        </ng-container>-->
+                            <ng-container>
+                                <div [ngStyle]="{'color': labelRequiredValidation ? 'red' : null }">Matched Labels</div>
+                            </ng-container>
+                        </ion-card-subtitle>
+                    </ion-card-header>
+                    <!--                    <ion-item>-->
+                    <!--                        <ion-text></ion-text>-->
+                    <!--                    </ion-item>-->
+
+                    <ion-list>
+                        <ng-container *ngFor="let label of matchedLabels">
+                            <ion-item (click)="onLabelChange(currentItem, label)" style="cursor:pointer">
+<!--                                <ion-radio name="{{currentItem}}" value="{{label.label}}" checked="{{label.label === }}"></ion-radio>&ndash;&gt;-->
+                                <ion-label>
+                                    <ion-icon *ngIf="label.label === currentItem.label" slot="icon-only" name="checkmark-circle"></ion-icon>
+<!--                                    <ion-icon slot="icon-only" name="person-circle"></ion-icon>-->
+                                    {{label.label}}
+                                </ion-label>
+                            </ion-item>
+                        </ng-container>
+                    </ion-list>
+                    <ion-card-header>
+                        <!--                    <ion-toggle [(ngModel)]="labelMode" (ionChange)="currentItem.label = ''"></ion-toggle>-->
+                        <ion-card-subtitle>
+                            <!--                        <ng-container class="ion-text-right">-->
+                            <!--                          -->
+                            <!--                        </ng-container>-->
+                            <ng-container>
+                                <div [ngStyle]="{'color': labelRequiredValidation ? 'red' : null }">Custom Label</div>
+                            </ng-container>
+                        </ion-card-subtitle>
+                    </ion-card-header>
+                    <ng-container>
+                        <ion-item>
+                            <ion-label>Label Type</ion-label>
+                            <ion-select placeholder="Select One" [(ngModel)]="parentLabelType" (ionChange)="onLabelTypeChange($event)">
+                                <ng-container *ngFor="let item of loadedParentTypes">
+                                    <ion-select-option [value]="item">{{item}}</ion-select-option>
+                                </ng-container>
+                            </ion-select>
+                        </ion-item>
+                        <ion-list *ngIf="parentLabelType && filteredChildLabels && filteredChildLabels.length > 0">
+                            <ng-container *ngFor="let label of filteredChildLabels">
+                                <ion-item (click)="onLabelChange(currentItem, label)" style="cursor:pointer">
+                                    <!--                                <ion-radio name="{{currentItem}}" value="{{label.label}}" checked="{{label.label === }}"></ion-radio>&ndash;&gt;-->
+                                    <ion-label>
+                                        <ion-icon *ngIf="label.label === currentItem.label" slot="icon-only" name="checkmark-circle"></ion-icon>
+                                        <!--                                    <ion-icon slot="icon-only" name="person-circle"></ion-icon>-->
+                                        {{label.label}}
+                                    </ion-label>
+                                </ion-item>
+                            </ng-container>
+                        </ion-list>
+                    </ng-container>
+
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+
+    </ion-row>
+
+
+<!--    <ion-card *ngIf="countries">-->
+<!--        <ion-card-header>-->
+<!--            <ion-card-subtitle>Selected Country</ion-card-subtitle>-->
+<!--        </ion-card-header>-->
+
+<!--        <ion-card-content>-->
+<!--            <ion-select [(ngModel)]="selectedCountry" name="selectCountry" multiple="false"-->
+<!--                        [placeholder]="selectedCountry ? selectedCountry : 'Tap to select..'"-->
+<!--                        (ionChange)="onComboboxSelect()" required>-->
+<!--                <ion-select-option *ngFor="let country of countries" value="{{country.name}}">-->
+<!--                    {{country.name}}-->
+<!--                </ion-select-option>-->
+<!--            </ion-select>-->
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+<!--    <ion-card *ngIf="years">-->
+<!--        <ion-card-header>-->
+<!--            <ion-card-subtitle>Selected Year</ion-card-subtitle>-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--            <ion-select [(ngModel)]="selectedYear" name="selectedYear" multiple="false"-->
+<!--                        [placeholder]="selectedYear ? selectedYear : 'Tap to select..'"-->
+<!--                        (ionChange)="onComboboxSelect()" required>-->
+<!--                <ion-select-option *ngFor="let year of years" value="{{year.id}}">-->
+<!--                    {{year.name}}-->
+<!--                </ion-select-option>-->
+<!--            </ion-select>-->
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+<!--    <ion-card *ngIf="isLoading">-->
+<!--        <ion-card-header>-->
+<!--            <ion-card-subtitle>Loading..</ion-card-subtitle>-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--            ...-->
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+<!--    <ion-card *ngIf="!isLoading && loadedHolidays.length == 0">-->
+<!--        <ion-card-header>-->
+<!--            <ion-card-subtitle> NO DATA LOADED</ion-card-subtitle>-->
+<!--        </ion-card-header>-->
+<!--        <ion-card-content>-->
+<!--            ...-->
+<!--        </ion-card-content>-->
+<!--    </ion-card>-->
+<!--    <ng-container *ngIf="loadedHolidays.length != 0">-->
+<!--        <ion-card *ngFor="let loadedHoliday of loadedHolidays">-->
+<!--            <ion-card-header>-->
+<!--                <ion-card-subtitle>{{loadedHoliday.name}}</ion-card-subtitle>-->
+<!--            </ion-card-header>-->
+
+<!--            <ion-card-content>-->
+<!--                {{loadedHoliday.date}}-->
+<!--            </ion-card-content>-->
+<!--        </ion-card>-->
+<!--    </ng-container>-->
+</ion-content>
