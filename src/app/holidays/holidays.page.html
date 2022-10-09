@@ -216,11 +216,9 @@
                     <ng-container>
                         <ion-item>
                             <ion-label>Label Type</ion-label>
-                            <ion-select placeholder="Select One" [(ngModel)]="parentLabelType" (ionChange)="onLabelTypeChange($event)">
-                                <ng-container *ngFor="let item of loadedParentTypes">
-                                    <ion-select-option [value]="item">{{item}}</ion-select-option>
-                                </ng-container>
-                            </ion-select>
+                            <ionic-selectable placeholder="Select One" [items]="loadedParentTypes" [canSearch]="true" [(ngModel)]="parentLabelType" (onChange)="onLabelTypeChange($event)">
+
+                            </ionic-selectable>
                         </ion-item>
                         <ion-list *ngIf="parentLabelType && filteredChildLabels && filteredChildLabels.length > 0">
                             <ng-container *ngFor="let label of filteredChildLabels">

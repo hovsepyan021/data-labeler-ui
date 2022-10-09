@@ -28,7 +28,8 @@ export class HolidaysPage implements OnInit {
 
     public loadedLabels: Label[];
     public filteredChildLabels: Label[];
-    public loadedParentTypes: Set<string> = new Set();
+    public loadedParentTypesSet: Set<any> = new Set();
+    public loadedParentTypes: Array<any> = [];
     public matchedLabels: Label[];
 
     public labeledCount = 0;
@@ -187,9 +188,11 @@ export class HolidaysPage implements OnInit {
         this.dataService.loadLabels().subscribe(loadedLabels => {
             this.loadedLabels = loadedLabels;
             loadedLabels.forEach(item => {
-                this.loadedParentTypes.add(item.parent);
+                this.loadedParentTypesSet.add(item.parent);
             });
+            this.loadedParentTypes = Array.from(this.loadedParentTypesSet.values());
         });
+
     }
     private onTextChange() {
        this.computeMatchedFinanceTerms();

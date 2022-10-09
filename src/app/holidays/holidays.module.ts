@@ -6,14 +6,16 @@ import {HolidaysRoutingModule} from "./holidays-routing.module";
 import {HolidaysPage} from "./holidays.page";
 import {DataService} from "../services/data.service";
 import {Find_popup} from "./find_popup/find_popup";
+import {IonicSelectableModule} from "ionic-selectable";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    HolidaysRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        HolidaysRoutingModule,
+        IonicSelectableModule
+    ],
   declarations: [HolidaysPage, Find_popup],
   providers: [DataService]
 })
